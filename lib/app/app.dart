@@ -16,6 +16,17 @@ class SmartHabitTracker extends StatelessWidget {
       onGenerateRoute: AppRoutes.route,
       initialBinding: ControllerBinders(),
       theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: const TextStyle(color: Colors.indigo),
+          hintStyle: const TextStyle(color: Colors.grey),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+        ),
         primarySwatch: Colors.indigo,
       ),
     );

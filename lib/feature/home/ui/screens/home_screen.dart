@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:smart_habit_tracker/feature/habit/data/model/habit_model.dart';
 
 import '../../../habit/UI/controller/habit_controller.dart' show HabitController;
+import '../../../habit/UI/screens/add_habit_screen.dart' show AddHabitScreen;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,15 +38,11 @@ class HomeScreen extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final newHabit = HabitModel(
-            title: 'New Habit',
-            description: 'Example habit added',
-            createdAt: DateTime.now(),
-          );
-          controller.addHabit(newHabit);
+          Get.to(() => AddHabitScreen());
         },
         child: const Icon(Icons.add),
       ),
+
     );
   }
 }
