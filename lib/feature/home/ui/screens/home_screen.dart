@@ -14,35 +14,172 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<HabitController>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Smart Habit Tracker')),
+    return   Scaffold(
+      backgroundColor: const Color(0xFFF6F7FB),
+      appBar: AppBar(
+        title: const Text("My Habits 💪"),
+        centerTitle: true,
+        backgroundColor: Colors.indigo,
+        elevation: 2,
+      ),
       body: Obx(() {
-        if (controller.habitList.isEmpty) {
-          return const Center(child: Text("No habits yet 😴"));
-        }
-        return ListView.builder(
-          itemCount: controller.habitList.length,
-          itemBuilder: (context, index) {
-            final habit = controller.habitList[index];
-            return ListTile(
-              title: Text(habit.title),
-              subtitle: Text(habit.description),
-              trailing: Checkbox(
-                value: habit.isCompleted,
-                onChanged: (_) => controller.toggleComplete(index),
+        if (controller.habits.isEmpty) {
+          return const Center(
+            child: Text(
+              "No habits added yet 😴",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
               ),
-              onLongPress: () => controller.deleteHabit(index),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: controller.habits.length,
+          itemBuilder: (context, index) {
+            final HabitModel habit = controller.habits[index];
+
+            return Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.indigo.shade400,
+                      Colors.indigo.shade500,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.indigo.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(2, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: habit.isCompleted,
+                      activeColor: Colors.greenAccent,
+
+                      checkColor: Colors.black,
+                      onChanged: (_) => controller.toggleCompletion(index),
+                    ),
+                    const SizedBox(width: 12),
+
+                    // ✅ Habit Info
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            habit.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          if (habit.description.isNotEmpty)
+                            Text(
+                              habit.description,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.85),
+                                fontSize: 13,
+                              ),
+                            ),
+                          const SizedBox(height: 8),
+
+                          // 🔥 Streak + Reminder Row
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.local_fire_department_rounded,
+                                  color: Colors.orangeAccent, size: 18),
+                              const SizedBox(width: 4),
+                              Text(
+                                "${habit.streak} day streak",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (habit.reminderTime != null)
+                                Builder(builder: (_) {
+                                  final now = DateTime.now();
+                                  final reminder = habit.reminderTime!;
+                                  final difference = reminder.difference(now);
+
+                                  String timeText;
+                                  Color timeColor;
+
+                                  if (difference.inMinutes > 0) {
+                                    final hours = difference.inHours;
+                                    final minutes = difference.inMinutes.remainder(60);
+                                    timeText = "in ${hours}h ${minutes}m";
+                                    timeColor = Colors.lightGreenAccent;
+                                  } else {
+                                    timeText = "missed ⏰";
+                                    timeColor = Colors.redAccent;
+                                  }
+
+                                  return Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.alarm_rounded,
+                                          size: 16, color: Colors.white),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "${reminder.hour.toString().padLeft(2, '0')}:${reminder.minute.toString().padLeft(2, '0')} ",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        timeText,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: timeColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
+
           },
         );
       }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => AddHabitScreen());
-        },
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.indigo,
+        onPressed: () => Get.to(() => AddHabitScreen()),
+        child: const Icon(Icons.add_rounded, size: 30),
       ),
-
     );
   }
 }
