@@ -152,8 +152,8 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: _saveHabit,
-                        icon: const Icon(Icons.save_rounded),
-                        label: const Text("Save Habit"),
+                        icon: const Icon(Icons.save_rounded,color: Colors.white,),
+                        label: const Text("Save Habit",style: TextStyle(color: Colors.white),),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.indigo,
                           padding: EdgeInsets.symmetric(vertical: size.height * 0.018),

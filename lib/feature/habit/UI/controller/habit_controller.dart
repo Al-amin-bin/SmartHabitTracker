@@ -140,4 +140,26 @@ class HabitController extends GetxController {
 
 
   }
+
+  void updateStreak(int index) {
+    final habit = habits[index];
+    final now = DateTime.now();
+
+    // ধরে নিচ্ছি প্রতিদিন habit একবার complete করতে হয়
+    final lastCompleted = habit.createdAt;
+
+    // আজ যদি নতুন দিন হয় এবং habit completed থাকে
+    if (habit.isCompleted &&
+        now.difference(lastCompleted).inDays >= 1) {
+      habit.streak += 1;
+      habit.createdAt = now;
+      habit.save();
+    } else if (!habit.isCompleted) {
+      habit.streak = 0; // reset if skipped
+      habit.save();
+    }
+
+    habits[index] = habit;
+  }
+
 }
